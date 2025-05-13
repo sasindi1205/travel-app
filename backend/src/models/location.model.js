@@ -33,4 +33,6 @@ const locationSchema = new Schema({
   },
 });
 
+//TO DO: girlie u have to connect the google map api so that we can search the locations from google mapsss and get the info from theree
+
 module.exports = mongoose.model("Location", locationSchema);

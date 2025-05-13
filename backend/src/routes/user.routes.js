@@ -73,12 +73,10 @@ router.get("/", async (req, res) => {
     );
     res.status(200).json(usersWithParticipatingTripIds);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        message: "Error fetching users with participating trip IDs",
-        error: err.message,
-      });
+    res.status(500).json({
+      message: "Error fetching users with participating trip IDs",
+      error: err.message,
+    });
   }
 });
 
@@ -156,6 +154,46 @@ router.get("/:userId/trips", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error fetching user data", error });
+  }
+});
+
+// Get categorized trips (current, upcoming, past) for a user
+router.get("/:userId/trips/status", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch all trips where the user is a participant
+    const trips = await Trip.find({ participants: userId });
+
+    const currentDate = new Date();
+
+    // Categorize trips
+    const categorizedTrips = {
+      past: trips.filter((trip) => new Date(trip.endDate) < currentDate),
+      current: trips.filter(
+        (trip) =>
+          new Date(trip.startDate) <= currentDate &&
+          new Date(trip.endDate) >= currentDate
+      ),
+      upcoming: trips.filter((trip) => new Date(trip.startDate) > currentDate),
+    };
+
+    res.status(200).json({
+      message: "Trips fetched successfully",
+      userId,
+      categorizedTrips,
+    });
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ message: "Error fetching trips", error: err.message });
   }
 });
 

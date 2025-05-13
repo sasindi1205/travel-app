@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const itinerarySchema = new Schema({
   tripId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Trip", // Reference to the Trips model
+    ref: "Trip",
     required: true,
   },
   days: [
@@ -12,28 +12,28 @@ const itinerarySchema = new Schema({
       dayNumber: {
         type: Number,
         required: true,
-        min: 1, // Ensure dayNumber starts from 1
+        min: 1,
       },
       timeslots: [
         {
           time: {
-            type: String, // e.g., "08:00 AM"
+            type: String,
             required: true,
-            match: /^([01]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)$/i, // Regex for valid time format
+            match: /^([01]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)$/i,
           },
           location: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Location", // Reference to the Locations model
+            ref: "Location",
             required: function () {
-              return !this.activity; // Require either location or activity
+              return !this.activity;
             },
           },
           activity: {
-            type: String, // e.g., "Visit museum"
+            type: String,
             required: function () {
-              return !this.location; // Require either activity or location
+              return !this.location;
             },
-            maxlength: 200, // Limit activity description length
+            maxlength: 200,
           },
         },
       ],
@@ -44,17 +44,17 @@ const itinerarySchema = new Schema({
       dayNumber: {
         type: Number,
         required: true,
-        min: 1, // Ensure dayNumber matches the day in days array
+        min: 1,
       },
       outfit: {
-        type: String, // e.g., "Casual wear"
-        maxlength: 100, // Limit outfit description length
+        type: String,
+        maxlength: 100,
       },
       image: {
-        type: String, // URL or path to the image
+        type: String,
         validate: {
           validator: function (v) {
-            return /^(http|https):\/\/[^ "]+$/.test(v); // Basic URL validation
+            return /^(http|https):\/\/[^ "]+$/.test(v);
           },
           message: "Invalid URL format for image",
         },

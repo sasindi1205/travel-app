@@ -13,8 +13,7 @@ router.post("/create", async (req, res) => {
       Collaboration,
       StartDate,
       EndDate,
-      // Removed 'Users' - we'll use 'participants'
-      participants = [], // Add this to accept an optional array of participant IDs
+      participants = [],
       Preferences,
       userId,
     } = req.body;
@@ -25,7 +24,7 @@ router.post("/create", async (req, res) => {
       return res.status(404).json({ message: "Organizer not found" });
     }
 
-    // Validate that all provided participant IDs are valid ObjectIds (optional, but good practice)
+    // Validate that all provided participant IDs are valid ObjectIds
     const validParticipantIds = participants.every((id) =>
       mongoose.Types.ObjectId.isValid(id)
     );
@@ -41,7 +40,7 @@ router.post("/create", async (req, res) => {
       Collaboration,
       StartDate,
       EndDate,
-      participants, // Include the participants array here
+      participants,
       Preferences,
       userId,
     });
@@ -137,15 +136,15 @@ router.put("/:userId/:tripId", async (req, res) => {
 
 // PUT: Add participants to a trip
 router.put("/:tripId/participants", async (req, res) => {
-  console.log("Params received:", req.params); // Log the entire req.params object
+  console.log("Params received:", req.params);
   try {
     const { tripId } = req.params;
-    const { userIds } = req.body; // Expect an array of user IDs
+    const { userIds } = req.body;
 
-    console.log("Attempting to update trip with ID:", tripId); // Log the tripId value
+    console.log("Attempting to update trip with ID:", tripId);
 
     const updatedTrip = await Trip.findByIdAndUpdate(
-      tripId, // This is the critical value
+      tripId,
       { $addToSet: { participants: { $each: userIds } } },
       { new: true }
     ).populate("participants", "-password");

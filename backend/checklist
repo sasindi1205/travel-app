@@ -2,7 +2,7 @@
 2- Database Connection (MongoDB with Mongoose).
 3- Routes and Controllers.
 4- Authentication (Passport.js, JWT).
-5- Email Service (Nodemailer).
+5- Email Service (Nodemailer). - scratch this off
 6- API Documentation (Swagger).
 7- Error Handling (Middleware to catch and format errors).
 
